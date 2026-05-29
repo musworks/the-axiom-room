@@ -1,0 +1,592 @@
+﻿const levels = [
+  {
+    title: "Level 1 — Modus Ponens",
+    subtitle: "Select compatible symbolic blocks.",
+    target: "Q",
+    premises: ["P → Q", "P"],
+    hints: [
+      "Look for the implication.",
+      "Use P → Q together with P.",
+    ],
+    steps: [
+      {
+        inputs: ["P → Q", "P"],
+        output: "Q",
+        label: "Modus Ponens",
+        explanation: "From P → Q and P, Q follows.",
+      },
+    ],
+  },
+  {
+    title: "Level 2 — Modus Tollens",
+    subtitle: "A denial can move backward through an implication.",
+    target: "¬P",
+    premises: ["P → Q", "¬Q"],
+    hints: [
+      "Start from the denied conclusion.",
+      "Combine P → Q with ¬Q.",
+    ],
+    steps: [
+      {
+        inputs: ["P → Q", "¬Q"],
+        output: "¬P",
+        label: "Modus Tollens",
+        explanation: "If Q is false, P cannot have led to Q.",
+      },
+    ],
+  },
+  {
+    title: "Level 3 — Hypothetical Syllogism",
+    subtitle: "Two implications can form a longer chain.",
+    target: "P → R",
+    premises: ["P → Q", "Q → R"],
+    hints: [
+      "Both blocks are implications.",
+      "Link the middle symbol Q.",
+    ],
+    steps: [
+      {
+        inputs: ["P → Q", "Q → R"],
+        output: "P → R",
+        label: "Hypothetical Syllogism",
+        explanation: "If P leads to Q and Q leads to R, then P leads to R.",
+      },
+    ],
+  },
+  {
+    title: "Level 4 — Chain Proof",
+    subtitle: "Combine derived statements to complete the proof.",
+    target: "R",
+    premises: ["P → Q", "¬Q", "¬P → R"],
+    hints: [
+      "The first move does not reach R yet.",
+      "Use P → Q with ¬Q before touching ¬P → R.",
+      "A derived ¬P will open the last implication.",
+    ],
+    steps: [
+      {
+        inputs: ["P → Q", "¬Q"],
+        output: "¬P",
+        label: "Modus Tollens",
+        explanation: "From P → Q and ¬Q, infer ¬P.",
+      },
+      {
+        inputs: ["¬P", "¬P → R"],
+        output: "R",
+        label: "Modus Ponens",
+        explanation: "Once ¬P is known, R follows from ¬P → R.",
+      },
+    ],
+  },
+  {
+    title: "Level 5 — Conjunction Introduction",
+    subtitle: "Two statements can be joined into one.",
+    target: "P ∧ Q",
+    premises: ["P", "Q"],
+    hints: [
+      "Nothing needs to be derived first.",
+      "Try joining the two available statements.",
+    ],
+    steps: [
+      {
+        inputs: ["P", "Q"],
+        output: "P ∧ Q",
+        label: "Conjunction Introduction",
+        explanation: "When P and Q are both available, they can be combined.",
+      },
+    ],
+  },
+  {
+    title: "Level 6 — Simplification Chain",
+    subtitle: "Extract one statement, then use it.",
+    target: "S",
+    premises: ["P ∧ Q", "P → S", "Q → R"],
+    hints: [
+      "One block contains two parts.",
+      "First isolate the symbol that matches an implication.",
+      "Q → R is not needed for the target.",
+    ],
+    steps: [
+      {
+        inputs: ["P ∧ Q"],
+        output: "P",
+        label: "Simplification",
+        explanation: "A conjunction allows one of its parts to be taken out.",
+      },
+      {
+        inputs: ["P → S", "P"],
+        output: "S",
+        label: "Modus Ponens",
+        explanation: "With P and P → S, S follows.",
+      },
+    ],
+  },
+  {
+    title: "Level 7 — Disjunctive Syllogism",
+    subtitle: "Eliminate one branch of the disjunction.",
+    target: "Q",
+    premises: ["P ∨ Q", "¬P"],
+    hints: [
+      "One option is ruled out.",
+      "The remaining branch is the target.",
+    ],
+    steps: [
+      {
+        inputs: ["P ∨ Q", "¬P"],
+        output: "Q",
+        label: "Disjunctive Syllogism",
+        explanation: "If P is excluded from P ∨ Q, only Q remains.",
+      },
+    ],
+  },
+  {
+    title: "Level 8 — Double Negation Chain",
+    subtitle: "Unwrap a statement, then carry it through two implications.",
+    target: "R",
+    premises: ["¬¬P", "P → Q", "Q → R"],
+    hints: [
+      "The first block hides a positive statement.",
+      "After that, the path moves through Q.",
+      "The proof ends only after two uses of Modus Ponens.",
+    ],
+    steps: [
+      {
+        inputs: ["¬¬P"],
+        output: "P",
+        label: "Double Negation",
+        explanation: "A double negation returns the original statement.",
+      },
+      {
+        inputs: ["P → Q", "P"],
+        output: "Q",
+        label: "Modus Ponens",
+        explanation: "From P → Q and P, infer Q.",
+      },
+      {
+        inputs: ["Q → R", "Q"],
+        output: "R",
+        label: "Modus Ponens",
+        explanation: "From Q → R and Q, infer R.",
+      },
+    ],
+  },
+  {
+    title: "Level 9 — Contraposition in Use",
+    subtitle: "Transform the implication, then apply it.",
+    target: "¬P",
+    premises: ["P → Q", "¬Q"],
+    hints: [
+      "A transformation may help before the final step.",
+      "Turn P → Q around by negating both sides.",
+      "The new implication can work with ¬Q.",
+    ],
+    steps: [
+      {
+        inputs: ["P → Q"],
+        output: "¬Q → ¬P",
+        label: "Contraposition",
+        explanation: "An implication can be rewritten as its contrapositive.",
+      },
+      {
+        inputs: ["¬Q → ¬P", "¬Q"],
+        output: "¬P",
+        label: "Modus Ponens",
+        explanation: "With ¬Q and ¬Q → ¬P, conclude ¬P.",
+      },
+    ],
+  },
+  {
+    title: "Level 10 — Mixed Proof",
+    subtitle: "Two clean steps are hidden among extra blocks.",
+    target: "R",
+    premises: ["P → Q", "Q → R", "P", "¬R → S", "Q ∧ T"],
+    hints: [
+      "Not every block belongs to the proof.",
+      "Begin with the only direct premise for an implication.",
+      "The conjunction is a decoy here.",
+    ],
+    steps: [
+      {
+        inputs: ["P → Q", "P"],
+        output: "Q",
+        label: "Modus Ponens",
+        explanation: "P activates the implication P → Q.",
+      },
+      {
+        inputs: ["Q → R", "Q"],
+        output: "R",
+        label: "Modus Ponens",
+        explanation: "The derived Q activates Q → R.",
+      },
+    ],
+  },
+  {
+    title: "Level 11 — False Consequence",
+    subtitle: "A valid step is not always the useful one.",
+    target: "R",
+    premises: ["P → Q", "Q", "P → R", "P"],
+    hints: [
+      "One implication reaches the target directly.",
+      "Another valid move leads somewhere true but unhelpful.",
+      "Do not chase Q just because it is already present.",
+    ],
+    steps: [
+      {
+        inputs: ["P → Q", "P"],
+        output: "Q",
+        label: "Modus Ponens",
+        explanation: "From P → Q and P, Q follows.",
+      },
+      {
+        inputs: ["P → R", "P"],
+        output: "R",
+        label: "Modus Ponens",
+        explanation: "From P → R and P, R follows.",
+      },
+    ],
+  },
+  {
+    title: "Level 12 — Necessary Thread",
+    subtitle: "Some correct steps still lead away from the goal.",
+    target: "T",
+    premises: ["P → Q", "P → R", "Q → T", "R → S", "P"],
+    hints: [
+      "Two branches open from P.",
+      "Only one branch reaches T.",
+      "R is a valid detour, but not the winning thread.",
+    ],
+    steps: [
+      {
+        inputs: ["P → Q", "P"],
+        output: "Q",
+        label: "Modus Ponens",
+        explanation: "P activates the implication P → Q.",
+      },
+      {
+        inputs: ["P → R", "P"],
+        output: "R",
+        label: "Modus Ponens",
+        explanation: "P also activates the implication P → R.",
+      },
+      {
+        inputs: ["R → S", "R"],
+        output: "S",
+        label: "Modus Ponens",
+        explanation: "R can validly lead to S, even if S is not the target.",
+      },
+      {
+        inputs: ["Q → T", "Q"],
+        output: "T",
+        label: "Modus Ponens",
+        explanation: "Once Q is known, Q → T gives T.",
+      },
+    ],
+  },
+];
+
+const blocksElement = document.querySelector("#blocks");
+const levelTitle = document.querySelector("#level-title");
+const levelCount = document.querySelector("#level-count");
+const levelNote = document.querySelector("#level-note");
+const goal = document.querySelector("#goal");
+const unknown = document.querySelector("#unknown");
+const result = document.querySelector("#result");
+const ruleLabel = document.querySelector("#rule-label");
+const stepExplanation = document.querySelector("#step-explanation");
+const hintText = document.querySelector("#hint-text");
+const resetButton = document.querySelector("#reset-button");
+const hintButton = document.querySelector("#hint-button");
+const nextButton = document.querySelector("#next-button");
+
+let levelIndex = 0;
+let blockState = [];
+let selectedIds = [];
+let solved = false;
+let hintIndex = 0;
+
+function createBlock(symbol, derived = false) {
+  const uniqueId = typeof crypto !== "undefined" && crypto.randomUUID
+    ? crypto.randomUUID()
+    : `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+
+  return {
+    id: `${symbol}-${uniqueId}`,
+    symbol,
+    derived,
+    disabled: false,
+  };
+}
+
+function getCurrentLevel() {
+  return levels[levelIndex];
+}
+
+function setStatus(message, type = "neutral", label = "") {
+  result.textContent = message;
+  result.className = type === "neutral" ? "result" : `result ${type}`;
+  ruleLabel.textContent = label;
+}
+
+function setExplanation(message = "") {
+  stepExplanation.textContent = message;
+}
+
+function setHint(message = "") {
+  hintText.textContent = message;
+}
+
+function loadLevel(index) {
+  levelIndex = index;
+  solved = false;
+  selectedIds = [];
+  hintIndex = 0;
+
+  const level = getCurrentLevel();
+
+  blockState = level.premises.map((symbol) => createBlock(symbol));
+
+  levelTitle.textContent = level.title;
+  levelCount.textContent = `${levelIndex + 1} / ${levels.length}`;
+  levelNote.textContent = level.subtitle;
+  goal.textContent = level.target;
+  unknown.textContent = "?";
+  unknown.classList.remove("solved");
+  setStatus("Awaiting inference.");
+  setExplanation("");
+  setHint("");
+  hintButton.disabled = false;
+  hintButton.textContent = "Hint";
+  nextButton.disabled = true;
+  nextButton.textContent = levelIndex === levels.length - 1 ? "Complete" : "Next level";
+
+  renderBlocks();
+}
+
+function renderBlocks() {
+  blocksElement.innerHTML = "";
+
+  blockState.forEach((block) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "symbol-block";
+    button.textContent = block.symbol;
+    button.dataset.id = block.id;
+
+    if (block.derived) {
+      button.classList.add("derived");
+    }
+
+    if (selectedIds.includes(block.id)) {
+      button.classList.add("selected");
+    }
+
+    if (block.disabled) {
+      button.disabled = true;
+    }
+
+    button.addEventListener("click", () => handleBlockClick(block.id));
+    blocksElement.appendChild(button);
+  });
+}
+
+function handleBlockClick(blockId) {
+  if (solved) {
+    return;
+  }
+
+  if (selectedIds.includes(blockId)) {
+    selectedIds = selectedIds.filter((id) => id !== blockId);
+  } else {
+    selectedIds = [...selectedIds, blockId];
+  }
+
+  syncSelectionState();
+  evaluateSelection();
+}
+
+function syncSelectionState() {
+  const blockButtons = blocksElement.querySelectorAll(".symbol-block");
+
+  blockButtons.forEach((button) => {
+    button.classList.toggle("selected", selectedIds.includes(button.dataset.id));
+  });
+}
+
+function evaluateSelection() {
+  const level = getCurrentLevel();
+  const selectedSymbols = selectedIds
+    .map((id) => blockState.find((block) => block.id === id)?.symbol)
+    .filter(Boolean);
+
+  if (selectedSymbols.length === 0) {
+    setStatus("Awaiting inference.");
+    setExplanation("");
+    return;
+  }
+
+  const matchingStep = level.steps.find((step) => sameSymbols(step.inputs, selectedSymbols));
+
+  if (matchingStep) {
+    applyInference(matchingStep);
+    return;
+  }
+
+  const partialMatch = level.steps.some((step) => isPartialSelection(step.inputs, selectedSymbols));
+
+  if (partialMatch) {
+    setStatus("Selection noted.");
+    setExplanation("");
+    return;
+  }
+
+  if (selectedSymbols.length >= 2) {
+    showInvalidFeedback();
+  }
+}
+
+function applyInference(step) {
+  clearSelection();
+
+  const outputExists = blockState.some((block) => block.symbol === step.output);
+
+  if (!outputExists) {
+    const newBlock = createBlock(step.output, true);
+    blockState.push(newBlock);
+    renderBlocks();
+
+    const newestBlock = blocksElement.querySelector(`[data-id="${newBlock.id}"]`);
+    if (newestBlock) {
+      newestBlock.classList.add("newly-created");
+      setTimeout(() => {
+        newestBlock.classList.remove("newly-created");
+      }, 1500);
+    }
+  }
+
+  setStatus(`⊢ ${step.output}`, "success", step.label);
+  setExplanation(step.explanation);
+
+  if (step.output === getCurrentLevel().target) {
+    completeLevel(step);
+  }
+}
+
+function completeLevel(step) {
+  solved = true;
+  unknown.textContent = getCurrentLevel().target;
+  unknown.classList.add("solved");
+  setStatus("■ Q.E.D.", "success", step.label);
+  setExplanation(step.explanation);
+  hintButton.disabled = true;
+  nextButton.disabled = false;
+
+  blockState = blockState.map((block) => ({
+    ...block,
+    disabled: true,
+  }));
+
+  renderBlocks();
+
+  if (levelIndex === levels.length - 1) {
+    nextButton.textContent = "All levels complete";
+    nextButton.disabled = true;
+    levelNote.textContent = "The room is quiet again.";
+  }
+}
+
+function clearSelection() {
+  selectedIds = [];
+  syncSelectionState();
+}
+
+function showInvalidFeedback() {
+  setStatus("⊬", "invalid");
+  setExplanation("");
+  clearSelection();
+  blocksElement.classList.remove("invalid");
+  void blocksElement.offsetWidth;
+  blocksElement.classList.add("invalid");
+}
+
+function showHint() {
+  const hints = getCurrentLevel().hints;
+
+  if (hints.length === 0) {
+    setHint("No hints.");
+    hintButton.textContent = "No hints";
+    return;
+  }
+
+  const currentHint = hints[Math.min(hintIndex, hints.length - 1)];
+  setHint(`Hint: ${currentHint}`);
+
+  if (hintIndex < hints.length - 1) {
+    hintIndex += 1;
+  } else {
+    hintButton.textContent = "Last hint shown";
+  }
+}
+
+function sameSymbols(left, right) {
+  if (left.length !== right.length) {
+    return false;
+  }
+
+  const leftCounts = countSymbols(left);
+  const rightCounts = countSymbols(right);
+
+  if (leftCounts.size !== rightCounts.size) {
+    return false;
+  }
+
+  for (const [symbol, count] of leftCounts.entries()) {
+    if (rightCounts.get(symbol) !== count) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+function isPartialSelection(stepInputs, chosenSymbols) {
+  if (chosenSymbols.length >= stepInputs.length) {
+    return false;
+  }
+
+  const stepCounts = countSymbols(stepInputs);
+  const chosenCounts = countSymbols(chosenSymbols);
+
+  for (const [symbol, count] of chosenCounts.entries()) {
+    if ((stepCounts.get(symbol) || 0) < count) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+function countSymbols(symbols) {
+  const counts = new Map();
+
+  symbols.forEach((symbol) => {
+    counts.set(symbol, (counts.get(symbol) || 0) + 1);
+  });
+
+  return counts;
+}
+
+resetButton.addEventListener("click", () => {
+  loadLevel(levelIndex);
+});
+
+hintButton.addEventListener("click", () => {
+  showHint();
+});
+
+nextButton.addEventListener("click", () => {
+  if (levelIndex < levels.length - 1) {
+    loadLevel(levelIndex + 1);
+  }
+});
+
+loadLevel(0);

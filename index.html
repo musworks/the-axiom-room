@@ -1,0 +1,91 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Axiom Room — Minimal Symbolic Logic Puzzle</title>
+  <meta
+    name="description"
+    content="A minimalist educational logic puzzle about symbolic inference, proof chains, and fundamental mathematical reasoning."
+  />
+  <meta name="author" content="Mus" />
+  <meta
+    name="keywords"
+    content="logic puzzle, symbolic logic, formal logic, math puzzle, proof chains, inference rules, Modus Ponens, Modus Tollens, educational game"
+  />
+  <meta name="theme-color" content="#f6f3ee" />
+
+  <meta property="og:title" content="The Axiom Room" />
+  <meta
+    property="og:description"
+    content="A minimalist educational logic puzzle about symbolic inference, proof chains, and fundamental mathematical reasoning."
+  />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="The Axiom Room" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="The Axiom Room" />
+  <meta
+    name="twitter:description"
+    content="A minimalist educational logic puzzle about symbolic inference, proof chains, and fundamental mathematical reasoning."
+  />
+
+  <link rel="icon" href="./mus-symbol.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <p class="instruction">Combine symbolic premises until the conclusion follows.</p>
+
+  <main class="room">
+    <section class="puzzle">
+      <header class="level-bar">
+        <div>
+          <p class="eyebrow">The Axiom Room</p>
+          <h1 class="level-title" id="level-title">Level 1</h1>
+        </div>
+        <p class="level-count" id="level-count">1 / 12</p>
+      </header>
+
+      <p class="level-note" id="level-note">Select compatible symbolic blocks.</p>
+
+      <div class="workspace">
+        <div class="blocks" id="blocks"></div>
+
+        <div class="target">
+          <span class="unknown" id="unknown">?</span>
+          <span class="turnstile">&vdash;</span>
+          <span class="goal" id="goal">Q</span>
+        </div>
+
+        <div class="feedback" aria-live="polite">
+          <p class="result" id="result">Awaiting inference.</p>
+          <p class="rule-label" id="rule-label"></p>
+          <p class="step-explanation" id="step-explanation"></p>
+          <p class="hint-text" id="hint-text"></p>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button class="control-button" id="reset-button" type="button">Reset level</button>
+        <button class="control-button" id="hint-button" type="button">Hint</button>
+        <button class="control-button primary" id="next-button" type="button" disabled>Next level</button>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="site-footer__inner">
+      <img
+        src="./mus-symbol.svg"
+        alt="Mus symbol"
+        class="site-footer__symbol"
+        width="28"
+        height="28"
+      />
+      <p class="site-footer__text">© 2026 Mus · All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="./script.js"></script>
+</body>
+</html>
