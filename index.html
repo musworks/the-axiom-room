@@ -67,8 +67,26 @@
 
       <div class="controls">
         <button class="control-button" id="reset-button" type="button">Reset level</button>
-        <button class="control-button" id="hint-button" type="button">Hint</button>
+
+        <div class="help-cluster">
+          <button class="control-button" id="hint-button" type="button">Hint</button>
+          <a
+            class="symbol-glossary-link"
+            href="https://www.musnotes.my.id/en/projects/axiom-room-symbol-glossary/"
+            target="_blank"
+            rel="noopener"
+          >
+            Symbol Glossary
+          </a>
+        </div>
+
         <button class="control-button primary" id="next-button" type="button" disabled>Next level</button>
+      </div>
+
+      <div class="utility-row">
+        <button class="sound-toggle" id="sound-toggle" type="button" aria-pressed="true">
+          Sound: On
+        </button>
       </div>
     </section>
   </main>
@@ -82,7 +100,18 @@
         width="28"
         height="28"
       />
-      <p class="site-footer__text">© 2026 Mus · All rights reserved.</p>
+      <p class="site-footer__text">
+        © 2026
+        <a
+          class="site-footer__link"
+          href="https://www.musnotes.my.id/"
+          target="_blank"
+          rel="noopener"
+        >
+          MuS
+        </a>
+        · All rights reserved.
+      </p>
     </div>
   </footer>
 
