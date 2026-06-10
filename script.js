@@ -282,6 +282,253 @@
       },
     ],
   },
+  {
+    title: "Level 13 — Extended Thread",
+    subtitle: "The useful line is longer now, though not the only valid one.",
+    target: "U",
+    premises: ["P → Q", "Q → R", "R → U", "P", "P → S"],
+    hints: [
+      "The target waits at the end of the longest direct chain.",
+      "Start with the single premise that activates an implication.",
+      "S can be reached, but it does not finish the proof.",
+    ],
+    steps: [
+      {
+        inputs: ["P → Q", "P"],
+        output: "Q",
+        label: "Modus Ponens",
+        explanation: "P begins the longer chain by activating P → Q.",
+      },
+      {
+        inputs: ["P → S", "P"],
+        output: "S",
+        label: "Modus Ponens",
+        explanation: "P also leads to S, though S does not complete the level.",
+      },
+      {
+        inputs: ["Q → R", "Q"],
+        output: "R",
+        label: "Modus Ponens",
+        explanation: "With Q in hand, Q → R carries the proof forward.",
+      },
+      {
+        inputs: ["R → U", "R"],
+        output: "U",
+        label: "Modus Ponens",
+        explanation: "The final implication turns R into U.",
+      },
+    ],
+  },
+  {
+    title: "Level 14 — Narrow Passage",
+    subtitle: "A closed branch leaves only one path forward.",
+    target: "T",
+    premises: ["P ∨ Q", "¬P", "Q → R", "R → T", "Q → S"],
+    hints: [
+      "The disjunction must be narrowed before the chain can continue.",
+      "Removing one branch reveals the symbol you need.",
+      "S is reachable, but it is not the target.",
+    ],
+    steps: [
+      {
+        inputs: ["P ∨ Q", "¬P"],
+        output: "Q",
+        label: "Disjunctive Syllogism",
+        explanation: "Once P is excluded from P ∨ Q, Q remains.",
+      },
+      {
+        inputs: ["Q → S", "Q"],
+        output: "S",
+        label: "Modus Ponens",
+        explanation: "Q can lead to S, but that branch stops short of the goal.",
+      },
+      {
+        inputs: ["Q → R", "Q"],
+        output: "R",
+        label: "Modus Ponens",
+        explanation: "The useful branch takes Q forward to R.",
+      },
+      {
+        inputs: ["R → T", "R"],
+        output: "T",
+        label: "Modus Ponens",
+        explanation: "From R, the last implication yields T.",
+      },
+    ],
+  },
+  {
+    title: "Level 15 — Compressed Route",
+    subtitle: "It can help to shorten the path before moving backward.",
+    target: "¬P",
+    premises: ["P → Q", "Q → R", "¬R", "P → S"],
+    hints: [
+      "The last block is not part of the winning route.",
+      "First build a single implication that reaches R from P.",
+      "Once that shorter route exists, the denial of R can travel back.",
+    ],
+    steps: [
+      {
+        inputs: ["P → S"],
+        output: "¬S → ¬P",
+        label: "Contraposition",
+        explanation: "P → S can be rewritten, though that new form does not help here.",
+      },
+      {
+        inputs: ["P → Q", "Q → R"],
+        output: "P → R",
+        label: "Hypothetical Syllogism",
+        explanation: "Linking the two implications creates a shorter route from P to R.",
+      },
+      {
+        inputs: ["P → R", "¬R"],
+        output: "¬P",
+        label: "Modus Tollens",
+        explanation: "If R is denied, then P cannot stand behind P → R.",
+      },
+    ],
+  },
+  {
+    title: "Level 16 — Joined Premise",
+    subtitle: "Two simple statements can unlock a stronger condition.",
+    target: "U",
+    premises: ["P", "Q", "P ∧ Q → R", "R → U", "Q → S"],
+    hints: [
+      "The room needs a combined statement before it opens.",
+      "Join the two plain premises first.",
+      "S is available along the way, but it is not the conclusion.",
+    ],
+    steps: [
+      {
+        inputs: ["P", "Q"],
+        output: "P ∧ Q",
+        label: "Conjunction Introduction",
+        explanation: "P and Q can be joined into the condition the next implication needs.",
+      },
+      {
+        inputs: ["Q → S", "Q"],
+        output: "S",
+        label: "Modus Ponens",
+        explanation: "Q leads to S, but that branch does not reach the target.",
+      },
+      {
+        inputs: ["P ∧ Q → R", "P ∧ Q"],
+        output: "R",
+        label: "Modus Ponens",
+        explanation: "Once P ∧ Q is available, it activates the implication to R.",
+      },
+      {
+        inputs: ["R → U", "R"],
+        output: "U",
+        label: "Modus Ponens",
+        explanation: "R opens the final step to U.",
+      },
+    ],
+  },
+  {
+    title: "Level 17 — Split Attention",
+    subtitle: "One joined block helps, and another quietly distracts.",
+    target: "V",
+    premises: ["P ∧ R", "Q ∧ S", "P → T", "T → V", "Q → U"],
+    hints: [
+      "Both conjunctions can be opened, but only one feeds the target.",
+      "Try separating the block whose first symbol matches an implication toward V.",
+      "U is a valid conclusion, just not the one this room asks for.",
+    ],
+    steps: [
+      {
+        inputs: ["Q ∧ S"],
+        output: "Q",
+        label: "Simplification",
+        explanation: "Q can be extracted, though it leads only to a side result.",
+      },
+      {
+        inputs: ["Q → U", "Q"],
+        output: "U",
+        label: "Modus Ponens",
+        explanation: "The decoy branch reaches U cleanly, but the target lies elsewhere.",
+      },
+      {
+        inputs: ["P ∧ R"],
+        output: "P",
+        label: "Simplification",
+        explanation: "P is the useful part to take from the first conjunction.",
+      },
+      {
+        inputs: ["P → T", "P"],
+        output: "T",
+        label: "Modus Ponens",
+        explanation: "With P available, P → T moves the proof forward.",
+      },
+      {
+        inputs: ["T → V", "T"],
+        output: "V",
+        label: "Modus Ponens",
+        explanation: "The last implication completes the target.",
+      },
+    ],
+  },
+  {
+    title: "Level 18 — Quiet Apex",
+    subtitle: "The logic wing closes with a longer proof than it first appears.",
+    target: "V",
+    premises: ["¬¬P", "P → Q", "Q → R", "R → S", "S → V", "P → T", "T → U"],
+    hints: [
+      "Unwrap the opening premise before anything else can move.",
+      "One branch from P is real, but it does not finish the room.",
+      "The clean finish comes from compressing the middle of the chain.",
+      "The last implication does not connect to P directly.",
+    ],
+    steps: [
+      {
+        inputs: ["¬¬P"],
+        output: "P",
+        label: "Double Negation",
+        explanation: "The opening block resolves to the positive statement P.",
+      },
+      {
+        inputs: ["P → T", "P"],
+        output: "T",
+        label: "Modus Ponens",
+        explanation: "P can lead to T, though that branch is not the finish.",
+      },
+      {
+        inputs: ["T → U", "T"],
+        output: "U",
+        label: "Modus Ponens",
+        explanation: "The side branch continues cleanly to U, still short of the target.",
+      },
+      {
+        inputs: ["S → V"],
+        output: "¬V → ¬S",
+        label: "Contraposition",
+        explanation: "The final implication can be rewritten, but the new form is not needed.",
+      },
+      {
+        inputs: ["Q → R", "R → S"],
+        output: "Q → S",
+        label: "Hypothetical Syllogism",
+        explanation: "The middle of the chain compresses into a direct route from Q to S.",
+      },
+      {
+        inputs: ["Q → S", "S → V"],
+        output: "Q → V",
+        label: "Hypothetical Syllogism",
+        explanation: "Extending the shortened chain creates a direct implication from Q to V.",
+      },
+      {
+        inputs: ["P → Q", "P"],
+        output: "Q",
+        label: "Modus Ponens",
+        explanation: "Once P is known, P → Q provides the last missing premise.",
+      },
+      {
+        inputs: ["Q → V", "Q"],
+        output: "V",
+        label: "Modus Ponens",
+        explanation: "The compressed route closes the wing with a final step to V.",
+      },
+    ],
+  },
 ];
 
 const blocksElement = document.querySelector("#blocks");

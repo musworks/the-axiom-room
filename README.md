@@ -26,7 +26,7 @@ This repository currently contains a single-page browser game built with plain:
 
 Current features:
 
-* 12 handcrafted levels
+* 18 handcrafted levels
 * symbolic block selection and derived statements
 * hints for each level
 * decoy paths where a valid move is not always the winning move
@@ -46,7 +46,8 @@ The current puzzle set introduces and reuses patterns such as:
 * Disjunctive Syllogism
 * Double Negation
 * Contraposition
-* short chained proofs
+* decoy-valid proof paths
+* longer multi-step inference chains
 
 ## How to Play
 
@@ -74,13 +75,15 @@ You can run the project by:
 
 The Axiom Room is an experimental learning piece, not a full formal logic course.
 
+This build still focuses only on symbolic inference puzzles.
+
 Its purpose is to make symbolic reasoning feel tactile and approachable through short interactive proofs, selective hints, and visual calm.
 
 ## Status
 
 Active prototype for the first Axiom Room logic wing.
 
-Future iterations may expand the puzzle language, proof structure, and adjacent mathematical themes.
+Future iterations may expand the puzzle language, proof structure, and adjacent mathematical themes without claiming those additions are present here yet.
 
 ## Author
 
