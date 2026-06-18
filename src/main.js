@@ -11,6 +11,7 @@ import { createBlock } from "./core/blocks.js";
 import { findMatchingStep, getSelectedSymbols, hasPartialMatch } from "./core/proofEngine.js";
 import { dom } from "./ui/dom.js";
 import {
+  appendProofLogEntry,
   markBlockNewlyCreated,
   renderAllLevelsComplete,
   renderBlocks,
@@ -83,7 +84,7 @@ function evaluateSelection() {
   const matchingStep = findMatchingStep(level.steps, selectedSymbols);
 
   if (matchingStep) {
-    applyInference(matchingStep);
+    applyInference(matchingStep, selectedSymbols);
     return;
   }
 
@@ -100,7 +101,7 @@ function evaluateSelection() {
   }
 }
 
-function applyInference(step) {
+function applyInference(step, inputSymbols) {
   clearSelection();
 
   const outputExists = blockState.some((block) => block.symbol === step.output);
@@ -114,6 +115,7 @@ function applyInference(step) {
 
   setStatus(`⊢ ${step.output}`, "success", step.label);
   setExplanation(step.explanation);
+  appendProofLogEntry(inputSymbols, step.output, step.label);
 
   if (step.output === getCurrentLevel().target) {
     completeLevel(step);

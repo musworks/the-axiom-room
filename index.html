@@ -40,64 +40,71 @@
   />
 
   <link rel="icon" href="./mus-symbol.svg" type="image/svg+xml" />
-  <link rel="stylesheet" href="./style.css" />
+  <link rel="stylesheet" href="./style.css?v=proof-panel" />
 </head>
 <body>
   <p class="instruction">Combine symbolic premises until the conclusion follows.</p>
 
   <main class="room">
-    <section class="puzzle">
-      <header class="level-bar">
-        <div>
-          <p class="eyebrow">The Axiom Room</p>
-          <h1 class="level-title" id="level-title">Level 1</h1>
-        </div>
-        <p class="level-count" id="level-count">1 / 12</p>
-      </header>
+    <div class="room-shell">
+      <section class="puzzle">
+        <header class="level-bar">
+          <div>
+            <p class="eyebrow">The Axiom Room</p>
+            <h1 class="level-title" id="level-title">Level 1</h1>
+          </div>
+          <p class="level-count" id="level-count">1 / 12</p>
+        </header>
 
-      <p class="level-note" id="level-note">Select compatible symbolic blocks.</p>
+        <p class="level-note" id="level-note">Select compatible symbolic blocks.</p>
 
-      <div class="workspace">
-        <div class="blocks" id="blocks"></div>
+        <div class="workspace">
+          <div class="blocks" id="blocks"></div>
 
-        <div class="target">
-          <span class="unknown" id="unknown">?</span>
-          <span class="turnstile">&vdash;</span>
-          <span class="goal" id="goal">Q</span>
-        </div>
+          <div class="target">
+            <span class="unknown" id="unknown">?</span>
+            <span class="turnstile">&vdash;</span>
+            <span class="goal" id="goal">Q</span>
+          </div>
 
-        <div class="feedback" aria-live="polite">
-          <p class="result" id="result">Awaiting inference.</p>
-          <p class="rule-label" id="rule-label"></p>
-          <p class="step-explanation" id="step-explanation"></p>
-          <p class="hint-text" id="hint-text"></p>
-        </div>
-      </div>
-
-      <div class="controls">
-        <button class="control-button" id="reset-button" type="button">Reset level</button>
-
-        <div class="help-cluster">
-          <button class="control-button" id="hint-button" type="button">Hint</button>
-          <a
-            class="symbol-glossary-link"
-            href="https://www.musnotes.my.id/en/projects/axiom-room-symbol-glossary/"
-            target="_blank"
-            rel="noopener"
-          >
-            Symbol Glossary
-          </a>
+          <div class="feedback" aria-live="polite">
+            <p class="result" id="result">Awaiting inference.</p>
+            <p class="rule-label" id="rule-label"></p>
+            <p class="step-explanation" id="step-explanation"></p>
+            <p class="hint-text" id="hint-text"></p>
+          </div>
         </div>
 
-        <button class="control-button primary" id="next-button" type="button" disabled>Next level</button>
-      </div>
+        <div class="controls">
+          <button class="control-button" id="reset-button" type="button">Reset level</button>
 
-      <div class="utility-row">
-        <button class="sound-toggle" id="sound-toggle" type="button" aria-pressed="true">
-          Sound: On
-        </button>
-      </div>
-    </section>
+          <div class="help-cluster">
+            <button class="control-button" id="hint-button" type="button">Hint</button>
+            <a
+              class="symbol-glossary-link"
+              href="https://www.musnotes.my.id/en/projects/axiom-room-symbol-glossary/"
+              target="_blank"
+              rel="noopener"
+            >
+              Symbol Glossary
+            </a>
+          </div>
+
+          <button class="control-button primary" id="next-button" type="button" disabled>Next level</button>
+        </div>
+
+        <div class="utility-row">
+          <button class="sound-toggle" id="sound-toggle" type="button" aria-pressed="true">
+            Sound: On
+          </button>
+        </div>
+      </section>
+
+      <aside class="proof-log" aria-live="polite">
+        <p class="proof-log__title">Proof log</p>
+        <ol class="proof-log__list" id="proof-log"></ol>
+      </aside>
+    </div>
   </main>
 
   <footer class="site-footer">

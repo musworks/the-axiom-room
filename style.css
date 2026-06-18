@@ -37,6 +37,15 @@ button {
   padding: 5.5rem 2rem 0;
 }
 
+.room-shell {
+  width: min(1120px, 100%);
+  display: grid;
+  grid-template-columns: minmax(0, 760px) minmax(260px, 320px);
+  align-items: start;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
 .instruction {
   position: fixed;
   top: 1.5rem;
@@ -50,9 +59,9 @@ button {
 }
 
 .puzzle {
-  width: min(760px, 100%);
+  width: 100%;
   display: grid;
-  gap: 2rem;
+  gap: 1.65rem;
   padding: 2rem;
   border: 1px solid rgba(184, 175, 163, 0.55);
   background: var(--panel);
@@ -99,9 +108,9 @@ button {
 
 .workspace {
   display: grid;
-  gap: 2.5rem;
+  gap: 2rem;
   justify-items: center;
-  padding: 2rem 0 1rem;
+  padding: 1.5rem 0 0.75rem;
   border-top: 1px solid rgba(216, 209, 199, 0.7);
   border-bottom: 1px solid rgba(216, 209, 199, 0.7);
 }
@@ -186,10 +195,42 @@ button {
 }
 
 .feedback {
-  min-height: 5.75rem;
+  min-height: 5.25rem;
   display: grid;
   gap: 0.35rem;
   justify-items: center;
+}
+
+.proof-log {
+  width: 100%;
+  min-height: 12rem;
+  padding: 1.25rem;
+  border: 1px solid rgba(184, 175, 163, 0.55);
+  background: var(--panel);
+  box-shadow: var(--shadow);
+}
+
+.proof-log__title {
+  margin: 0 0 0.65rem;
+  color: var(--muted);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.proof-log__list {
+  display: grid;
+  gap: 0.45rem;
+  margin: 0;
+  padding-left: 1.35rem;
+  color: rgba(31, 28, 24, 0.82);
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+.proof-log__list:empty {
+  display: none;
 }
 
 .result {
@@ -396,6 +437,16 @@ button {
   }
 }
 
+@media (max-width: 980px) {
+  .room-shell {
+    grid-template-columns: minmax(0, 760px);
+  }
+
+  .proof-log {
+    min-height: 7rem;
+  }
+}
+
 @media (max-width: 640px) {
   .room {
     padding: 1rem 1rem 0;
@@ -410,6 +461,10 @@ button {
   .puzzle {
     padding: 1.5rem;
     margin-top: 1rem;
+  }
+
+  .room-shell {
+    gap: 1rem;
   }
 
   .level-bar,
@@ -430,6 +485,10 @@ button {
   .symbol-block {
     min-width: 96px;
     font-size: 1.15rem;
+  }
+
+  .proof-log {
+    width: 100%;
   }
 
  .site-footer {

@@ -9,6 +9,7 @@ export const dom = {
   ruleLabel: document.querySelector("#rule-label"),
   stepExplanation: document.querySelector("#step-explanation"),
   hintText: document.querySelector("#hint-text"),
+  proofLog: document.querySelector("#proof-log"),
   resetButton: document.querySelector("#reset-button"),
   hintButton: document.querySelector("#hint-button"),
   nextButton: document.querySelector("#next-button"),

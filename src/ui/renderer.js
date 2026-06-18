@@ -10,6 +10,7 @@ export function renderLevel(level, levelIndex, totalLevels) {
   setStatus("Awaiting inference.");
   setExplanation("");
   setHint("");
+  clearProofLog();
   dom.hintButton.disabled = false;
   dom.hintButton.textContent = "Hint";
   dom.nextButton.disabled = true;
@@ -74,6 +75,16 @@ export function setExplanation(message = "") {
 
 export function setHint(message = "") {
   dom.hintText.textContent = message;
+}
+
+export function appendProofLogEntry(inputSymbols, outputSymbol, ruleLabel) {
+  const entry = document.createElement("li");
+  entry.textContent = `${inputSymbols.join(", ")} ⊢ ${outputSymbol} — ${ruleLabel}`;
+  dom.proofLog.appendChild(entry);
+}
+
+export function clearProofLog() {
+  dom.proofLog.innerHTML = "";
 }
 
 export function renderInvalidSelection() {
