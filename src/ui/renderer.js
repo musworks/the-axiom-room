@@ -1,0 +1,112 @@
+import { dom } from "./dom.js";
+
+export function renderLevel(level, levelIndex, totalLevels) {
+  dom.levelTitle.textContent = level.title;
+  dom.levelCount.textContent = `${levelIndex + 1} / ${totalLevels}`;
+  dom.levelNote.textContent = level.subtitle;
+  dom.goal.textContent = level.target;
+  dom.unknown.textContent = "?";
+  dom.unknown.classList.remove("solved");
+  setStatus("Awaiting inference.");
+  setExplanation("");
+  setHint("");
+  dom.hintButton.disabled = false;
+  dom.hintButton.textContent = "Hint";
+  dom.nextButton.disabled = true;
+  dom.nextButton.textContent = levelIndex === totalLevels - 1 ? "Complete" : "Next level";
+}
+
+export function renderBlocks(blockState, selectedIds, onBlockClick) {
+  dom.blocksElement.innerHTML = "";
+
+  blockState.forEach((block) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "symbol-block";
+    button.textContent = block.symbol;
+    button.dataset.id = block.id;
+
+    if (block.derived) {
+      button.classList.add("derived");
+    }
+
+    if (selectedIds.includes(block.id)) {
+      button.classList.add("selected");
+    }
+
+    if (block.disabled) {
+      button.disabled = true;
+    }
+
+    button.addEventListener("click", () => onBlockClick(block.id));
+    dom.blocksElement.appendChild(button);
+  });
+}
+
+export function syncSelectionState(selectedIds) {
+  const blockButtons = dom.blocksElement.querySelectorAll(".symbol-block");
+
+  blockButtons.forEach((button) => {
+    button.classList.toggle("selected", selectedIds.includes(button.dataset.id));
+  });
+}
+
+export function markBlockNewlyCreated(blockId) {
+  const newestBlock = dom.blocksElement.querySelector(`[data-id="${blockId}"]`);
+
+  if (newestBlock) {
+    newestBlock.classList.add("newly-created");
+    setTimeout(() => {
+      newestBlock.classList.remove("newly-created");
+    }, 1500);
+  }
+}
+
+export function setStatus(message, type = "neutral", label = "") {
+  dom.result.textContent = message;
+  dom.result.className = type === "neutral" ? "result" : `result ${type}`;
+  dom.ruleLabel.textContent = label;
+}
+
+export function setExplanation(message = "") {
+  dom.stepExplanation.textContent = message;
+}
+
+export function setHint(message = "") {
+  dom.hintText.textContent = message;
+}
+
+export function renderInvalidSelection() {
+  dom.blocksElement.classList.remove("invalid");
+  void dom.blocksElement.offsetWidth;
+  dom.blocksElement.classList.add("invalid");
+}
+
+export function renderLevelComplete(target, label, explanation) {
+  dom.unknown.textContent = target;
+  dom.unknown.classList.add("solved");
+  setStatus("■ Q.E.D.", "success", label);
+  setExplanation(explanation);
+  dom.hintButton.disabled = true;
+  dom.nextButton.disabled = false;
+}
+
+export function renderAllLevelsComplete() {
+  dom.nextButton.textContent = "All levels complete";
+  dom.nextButton.disabled = true;
+  dom.levelNote.textContent = "The room is quiet again.";
+}
+
+export function renderHintButtonLastHint() {
+  dom.hintButton.textContent = "Last hint shown";
+}
+
+export function renderNoHints() {
+  setHint("No hints.");
+  dom.hintButton.textContent = "No hints";
+}
+
+export function renderSoundToggle(enabled) {
+  dom.soundToggle.textContent = enabled ? "Sound: On" : "Sound: Off";
+  dom.soundToggle.setAttribute("aria-pressed", String(enabled));
+}

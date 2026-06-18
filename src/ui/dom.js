@@ -1,0 +1,16 @@
+export const dom = {
+  blocksElement: document.querySelector("#blocks"),
+  levelTitle: document.querySelector("#level-title"),
+  levelCount: document.querySelector("#level-count"),
+  levelNote: document.querySelector("#level-note"),
+  goal: document.querySelector("#goal"),
+  unknown: document.querySelector("#unknown"),
+  result: document.querySelector("#result"),
+  ruleLabel: document.querySelector("#rule-label"),
+  stepExplanation: document.querySelector("#step-explanation"),
+  hintText: document.querySelector("#hint-text"),
+  resetButton: document.querySelector("#reset-button"),
+  hintButton: document.querySelector("#hint-button"),
+  nextButton: document.querySelector("#next-button"),
+  soundToggle: document.querySelector("#sound-toggle"),
+};
