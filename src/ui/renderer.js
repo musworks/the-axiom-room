@@ -2,7 +2,7 @@ import { dom } from "./dom.js";
 
 export function renderLevel(level, levelIndex, totalLevels) {
   dom.levelTitle.textContent = level.title;
-  dom.levelCount.textContent = `${levelIndex + 1} / ${totalLevels}`;
+  dom.levelCount.textContent = `Level ${levelIndex + 1} / ${totalLevels}`;
   dom.levelNote.textContent = level.subtitle;
   dom.goal.textContent = level.target;
   dom.unknown.textContent = "?";
@@ -42,6 +42,35 @@ export function renderBlocks(blockState, selectedIds, onBlockClick) {
     button.addEventListener("click", () => onBlockClick(block.id));
     dom.blocksElement.appendChild(button);
   });
+}
+
+export function renderLevelSelector(
+  totalLevels,
+  currentLevelIndex,
+  highestCompletedLevelIndex,
+  onLevelSelect,
+) {
+  dom.levelSelector.innerHTML = "";
+
+  for (let index = 0; index < totalLevels; index += 1) {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "level-button";
+    button.textContent = String(index + 1);
+    button.setAttribute("aria-label", `Level ${index + 1}`);
+
+    if (index <= highestCompletedLevelIndex) {
+      button.classList.add("completed");
+    }
+
+    if (index === currentLevelIndex) {
+      button.classList.add("current");
+      button.setAttribute("aria-current", "true");
+    }
+
+    button.addEventListener("click", () => onLevelSelect(index));
+    dom.levelSelector.appendChild(button);
+  }
 }
 
 export function syncSelectionState(selectedIds) {
@@ -120,4 +149,19 @@ export function renderNoHints() {
 export function renderSoundToggle(enabled) {
   dom.soundToggle.textContent = enabled ? "Sound: On" : "Sound: Off";
   dom.soundToggle.setAttribute("aria-pressed", String(enabled));
+}
+
+export function showInspectorPanel(panelName) {
+  const showLevels = panelName === "levels";
+  const tabPairs = [
+    [dom.proofLogTab, dom.proofLogPanel, !showLevels],
+    [dom.levelsTab, dom.levelsPanel, showLevels],
+  ];
+
+  tabPairs.forEach(([tab, panel, isActive]) => {
+    tab.classList.toggle("active", isActive);
+    tab.setAttribute("aria-selected", String(isActive));
+    panel.classList.toggle("active", isActive);
+    panel.hidden = !isActive;
+  });
 }

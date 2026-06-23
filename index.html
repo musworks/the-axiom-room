@@ -40,7 +40,7 @@
   />
 
   <link rel="icon" href="./mus-symbol.svg" type="image/svg+xml" />
-  <link rel="stylesheet" href="./style.css?v=proof-panel" />
+  <link rel="stylesheet" href="./style.css?v=inspector-layout" />
 </head>
 <body>
   <p class="instruction">Combine symbolic premises until the conclusion follows.</p>
@@ -53,7 +53,12 @@
             <p class="eyebrow">The Axiom Room</p>
             <h1 class="level-title" id="level-title">Level 1</h1>
           </div>
-          <p class="level-count" id="level-count">1 / 12</p>
+          <div class="level-progress">
+            <p class="level-count" id="level-count">Level 1 / 18</p>
+            <button class="open-levels-button" id="open-levels-button" type="button">
+              Open Levels
+            </button>
+          </div>
         </header>
 
         <p class="level-note" id="level-note">Select compatible symbolic blocks.</p>
@@ -100,9 +105,54 @@
         </div>
       </section>
 
-      <aside class="proof-log" aria-live="polite">
-        <p class="proof-log__title">Proof log</p>
-        <ol class="proof-log__list" id="proof-log"></ol>
+      <aside class="inspector" aria-label="Game inspector">
+        <div class="inspector-tabs" role="tablist" aria-label="Inspector sections">
+          <button
+            class="inspector-tab active"
+            id="proof-log-tab"
+            type="button"
+            role="tab"
+            aria-selected="true"
+            aria-controls="proof-log-panel"
+          >
+            Proof Log
+          </button>
+          <button
+            class="inspector-tab"
+            id="levels-tab"
+            type="button"
+            role="tab"
+            aria-selected="false"
+            aria-controls="levels-panel"
+          >
+            Levels
+          </button>
+        </div>
+
+        <section
+          class="inspector-panel active"
+          id="proof-log-panel"
+          role="tabpanel"
+          aria-labelledby="proof-log-tab"
+        >
+          <div class="proof-log" aria-live="polite">
+            <p class="proof-log__title">Proof Log</p>
+            <ol class="proof-log__list" id="proof-log"></ol>
+          </div>
+        </section>
+
+        <section
+          class="inspector-panel"
+          id="levels-panel"
+          role="tabpanel"
+          aria-labelledby="levels-tab"
+          hidden
+        >
+          <nav class="level-selector" aria-label="Level selector">
+            <p class="level-selector__title">Levels</p>
+            <div class="level-selector__grid" id="level-selector"></div>
+          </nav>
+        </section>
       </aside>
     </div>
   </main>

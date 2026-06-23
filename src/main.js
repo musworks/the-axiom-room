@@ -9,6 +9,11 @@ import {
 } from "./audio/sound.js";
 import { createBlock } from "./core/blocks.js";
 import { findMatchingStep, getSelectedSymbols, hasPartialMatch } from "./core/proofEngine.js";
+import {
+  loadSavedProgress,
+  saveHighestCompletedLevelIndex,
+  saveLastOpenedLevelIndex,
+} from "./core/progress.js";
 import { dom } from "./ui/dom.js";
 import {
   appendProofLogEntry,
@@ -18,12 +23,14 @@ import {
   renderHintButtonLastHint,
   renderInvalidSelection,
   renderLevel,
+  renderLevelSelector,
   renderLevelComplete,
   renderNoHints,
   renderSoundToggle,
   setExplanation,
   setHint,
   setStatus,
+  showInspectorPanel,
   syncSelectionState,
 } from "./ui/renderer.js";
 
@@ -33,6 +40,7 @@ let selectedIds = [];
 let solved = false;
 let hintIndex = 0;
 let hasPlayedCompleteSound = false;
+let highestCompletedLevelIndex = -1;
 
 function getCurrentLevel() {
   return levels[levelIndex];
@@ -50,7 +58,14 @@ function loadLevel(index) {
   blockState = level.premises.map((symbol) => createBlock(symbol));
 
   renderLevel(level, levelIndex, levels.length);
+  renderLevelSelector(
+    levels.length,
+    levelIndex,
+    highestCompletedLevelIndex,
+    handleLevelSelect,
+  );
   renderBlocks(blockState, selectedIds, handleBlockClick);
+  saveLastOpenedLevelIndex(levelIndex);
 }
 
 function handleBlockClick(blockId) {
@@ -129,6 +144,17 @@ function completeLevel(step) {
   solved = true;
   renderLevelComplete(getCurrentLevel().target, step.label, step.explanation);
 
+  if (levelIndex > highestCompletedLevelIndex) {
+    highestCompletedLevelIndex = levelIndex;
+    saveHighestCompletedLevelIndex(highestCompletedLevelIndex);
+    renderLevelSelector(
+      levels.length,
+      levelIndex,
+      highestCompletedLevelIndex,
+      handleLevelSelect,
+    );
+  }
+
   blockState = blockState.map((block) => ({
     ...block,
     disabled: true,
@@ -177,6 +203,10 @@ function showHint() {
   }
 }
 
+function handleLevelSelect(index) {
+  loadLevel(index);
+}
+
 dom.resetButton.addEventListener("click", () => {
   loadLevel(levelIndex);
 });
@@ -191,9 +221,24 @@ dom.nextButton.addEventListener("click", () => {
   }
 });
 
+dom.proofLogTab.addEventListener("click", () => {
+  showInspectorPanel("proof-log");
+});
+
+dom.levelsTab.addEventListener("click", () => {
+  showInspectorPanel("levels");
+});
+
+dom.openLevelsButton.addEventListener("click", () => {
+  showInspectorPanel("levels");
+});
+
 dom.soundToggle.addEventListener("click", () => {
   renderSoundToggle(toggleSound());
 });
 
 renderSoundToggle(isSoundEnabled());
-loadLevel(0);
+
+const savedProgress = loadSavedProgress(levels.length);
+highestCompletedLevelIndex = savedProgress.highestCompletedLevelIndex;
+loadLevel(savedProgress.lastOpenedLevelIndex);
