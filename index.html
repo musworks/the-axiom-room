@@ -159,21 +159,42 @@
           hidden
         >
           <div class="run-stats" aria-live="polite">
-            <p class="run-stats__title">Run Stats</p>
-            <dl class="run-stats__list">
-              <div class="run-stats__row">
-                <dt>Successful steps</dt>
-                <dd id="successful-steps">0</dd>
-              </div>
-              <div class="run-stats__row">
-                <dt>Invalid attempts</dt>
-                <dd id="invalid-attempts">0</dd>
-              </div>
-              <div class="run-stats__row">
-                <dt>Hints used</dt>
-                <dd id="hints-used">0</dd>
-              </div>
-            </dl>
+            <section class="run-stats__section" aria-labelledby="current-run-title">
+              <p class="run-stats__title" id="current-run-title">Current Run</p>
+              <dl class="run-stats__list">
+                <div class="run-stats__row">
+                  <dt>Successful steps</dt>
+                  <dd id="successful-steps">0</dd>
+                </div>
+                <div class="run-stats__row">
+                  <dt>Invalid attempts</dt>
+                  <dd id="invalid-attempts">0</dd>
+                </div>
+                <div class="run-stats__row">
+                  <dt>Hints used</dt>
+                  <dd id="hints-used">0</dd>
+                </div>
+              </dl>
+            </section>
+
+            <section class="run-stats__section" aria-labelledby="best-record-title">
+              <p class="run-stats__title" id="best-record-title">Best Record</p>
+              <p class="run-stats__empty" id="best-record-empty">No completed record yet.</p>
+              <dl class="run-stats__list" id="best-record-list" hidden>
+                <div class="run-stats__row">
+                  <dt>Successful steps</dt>
+                  <dd id="best-successful-steps">0</dd>
+                </div>
+                <div class="run-stats__row">
+                  <dt>Invalid attempts</dt>
+                  <dd id="best-invalid-attempts">0</dd>
+                </div>
+                <div class="run-stats__row">
+                  <dt>Hints used</dt>
+                  <dd id="best-hints-used">0</dd>
+                </div>
+              </dl>
+            </section>
             <p class="run-stats__summary" id="completion-summary" hidden></p>
           </div>
         </section>

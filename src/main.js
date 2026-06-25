@@ -8,6 +8,7 @@ import {
   toggleSound,
 } from "./audio/sound.js";
 import { createBlock } from "./core/blocks.js";
+import { getBestRecord, saveBestRecord } from "./core/bestRecords.js";
 import { findMatchingStep, getSelectedSymbols, hasPartialMatch } from "./core/proofEngine.js";
 import {
   loadSavedProgress,
@@ -49,6 +50,7 @@ let solved = false;
 let hintIndex = 0;
 let hasPlayedCompleteSound = false;
 let highestCompletedLevelIndex = -1;
+let bestRecord = null;
 
 function getCurrentLevel() {
   return levels[levelIndex];
@@ -62,6 +64,7 @@ function loadLevel(index) {
   hasPlayedCompleteSound = false;
 
   const level = getCurrentLevel();
+  bestRecord = getBestRecord(levelIndex);
 
   blockState = level.premises.map((symbol) => createBlock(symbol));
 
@@ -73,7 +76,7 @@ function loadLevel(index) {
     handleLevelSelect,
   );
   renderBlocks(blockState, selectedIds, handleBlockClick);
-  renderRunStats(resetRunStats());
+  renderRunStats(resetRunStats(), bestRecord);
   saveLastOpenedLevelIndex(levelIndex);
 }
 
@@ -130,17 +133,21 @@ function applyInference(step, inputSymbols) {
 
   const outputExists = blockState.some((block) => block.symbol === step.output);
 
-  if (!outputExists) {
-    const newBlock = createBlock(step.output, true);
-    blockState.push(newBlock);
-    renderBlocks(blockState, selectedIds, handleBlockClick);
-    markBlockNewlyCreated(newBlock.id);
+  if (outputExists) {
+    setStatus("Already derived.");
+    setExplanation("");
+    return;
   }
+
+  const newBlock = createBlock(step.output, true);
+  blockState.push(newBlock);
+  renderBlocks(blockState, selectedIds, handleBlockClick);
+  markBlockNewlyCreated(newBlock.id);
 
   setStatus(`⊢ ${step.output}`, "success", step.label);
   setExplanation(step.explanation);
   appendProofLogEntry(inputSymbols, step.output, step.label);
-  renderRunStats(recordSuccessfulStep());
+  renderRunStats(recordSuccessfulStep(), bestRecord);
 
   if (step.output === getCurrentLevel().target) {
     completeLevel(step);
@@ -152,7 +159,10 @@ function applyInference(step, inputSymbols) {
 
 function completeLevel(step) {
   solved = true;
-  renderRunStats(recordRunComplete());
+  const completedStats = recordRunComplete();
+  const bestRecordResult = saveBestRecord(levelIndex, completedStats);
+  bestRecord = bestRecordResult.record;
+  renderRunStats(completedStats, bestRecord, bestRecordResult.isNewBest);
   renderLevelComplete(getCurrentLevel().target, step.label, step.explanation);
 
   if (levelIndex > highestCompletedLevelIndex) {
@@ -193,7 +203,7 @@ function showInvalidFeedback() {
   setExplanation("");
   clearSelection();
   playWrongSound();
-  renderRunStats(recordInvalidAttempt());
+  renderRunStats(recordInvalidAttempt(), bestRecord);
   renderInvalidSelection();
 }
 
@@ -211,7 +221,7 @@ function showHint() {
 
   if (isNewHint) {
     hintIndex += 1;
-    renderRunStats(recordHintUsed());
+    renderRunStats(recordHintUsed(), bestRecord);
   }
 
   if (hintIndex >= hints.length) {

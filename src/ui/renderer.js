@@ -122,22 +122,57 @@ export function renderInvalidSelection() {
   dom.blocksElement.classList.add("invalid");
 }
 
-function formatStatCount(count, singularLabel, pluralLabel) {
-  return `${count} ${count === 1 ? singularLabel : pluralLabel}`;
+function formatStatCount(value, singularLabel, pluralLabel) {
+  return `${value} ${value === 1 ? singularLabel : pluralLabel}`;
 }
 
-export function renderRunStats(stats) {
-  dom.successfulSteps.textContent = String(stats.successfulSteps);
-  dom.invalidAttempts.textContent = String(stats.invalidAttempts);
-  dom.hintsUsed.textContent = String(stats.hintsUsed);
+function renderRecordValues(record, elements) {
+  elements.successfulSteps.textContent = String(record.successfulSteps);
+  elements.invalidAttempts.textContent = String(record.invalidAttempts);
+  elements.hintsUsed.textContent = String(record.hintsUsed);
+}
+
+export function renderRunStats(stats, bestRecord = null, isNewBest = false) {
+  renderRecordValues(stats, {
+    successfulSteps: dom.successfulSteps,
+    invalidAttempts: dom.invalidAttempts,
+    hintsUsed: dom.hintsUsed,
+  });
+
+  if (bestRecord) {
+    renderRecordValues(bestRecord, {
+      successfulSteps: dom.bestSuccessfulSteps,
+      invalidAttempts: dom.bestInvalidAttempts,
+      hintsUsed: dom.bestHintsUsed,
+    });
+    dom.bestRecordEmpty.hidden = true;
+    dom.bestRecordList.hidden = false;
+  } else {
+    renderRecordValues(
+      { successfulSteps: 0, invalidAttempts: 0, hintsUsed: 0 },
+      {
+        successfulSteps: dom.bestSuccessfulSteps,
+        invalidAttempts: dom.bestInvalidAttempts,
+        hintsUsed: dom.bestHintsUsed,
+      },
+    );
+    dom.bestRecordEmpty.hidden = false;
+    dom.bestRecordList.hidden = true;
+  }
 
   if (stats.completed) {
-    dom.completionSummary.textContent = [
+    const summary = [
       "Level complete.",
       `${formatStatCount(stats.successfulSteps, "successful step", "successful steps")},`,
       `${formatStatCount(stats.invalidAttempts, "invalid attempt", "invalid attempts")},`,
       `${formatStatCount(stats.hintsUsed, "hint used", "hints used")}.`,
-    ].join(" ");
+    ];
+
+    if (isNewBest) {
+      summary.push("New best record.");
+    }
+
+    dom.completionSummary.textContent = summary.join(" ");
     dom.completionSummary.hidden = false;
   } else {
     dom.completionSummary.textContent = "";
