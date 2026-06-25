@@ -122,6 +122,29 @@ export function renderInvalidSelection() {
   dom.blocksElement.classList.add("invalid");
 }
 
+function formatStatCount(count, singularLabel, pluralLabel) {
+  return `${count} ${count === 1 ? singularLabel : pluralLabel}`;
+}
+
+export function renderRunStats(stats) {
+  dom.successfulSteps.textContent = String(stats.successfulSteps);
+  dom.invalidAttempts.textContent = String(stats.invalidAttempts);
+  dom.hintsUsed.textContent = String(stats.hintsUsed);
+
+  if (stats.completed) {
+    dom.completionSummary.textContent = [
+      "Level complete.",
+      `${formatStatCount(stats.successfulSteps, "successful step", "successful steps")},`,
+      `${formatStatCount(stats.invalidAttempts, "invalid attempt", "invalid attempts")},`,
+      `${formatStatCount(stats.hintsUsed, "hint used", "hints used")}.`,
+    ].join(" ");
+    dom.completionSummary.hidden = false;
+  } else {
+    dom.completionSummary.textContent = "";
+    dom.completionSummary.hidden = true;
+  }
+}
+
 export function renderLevelComplete(target, label, explanation) {
   dom.unknown.textContent = target;
   dom.unknown.classList.add("solved");
@@ -152,10 +175,10 @@ export function renderSoundToggle(enabled) {
 }
 
 export function showInspectorPanel(panelName) {
-  const showLevels = panelName === "levels";
   const tabPairs = [
-    [dom.proofLogTab, dom.proofLogPanel, !showLevels],
-    [dom.levelsTab, dom.levelsPanel, showLevels],
+    [dom.proofLogTab, dom.proofLogPanel, panelName === "proof-log"],
+    [dom.statsTab, dom.statsPanel, panelName === "stats"],
+    [dom.levelsTab, dom.levelsPanel, panelName === "levels"],
   ];
 
   tabPairs.forEach(([tab, panel, isActive]) => {

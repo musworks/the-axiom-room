@@ -92,6 +92,7 @@ button {
 .level-count,
 .level-note,
 .level-selector__title,
+.run-stats__title,
 .rule-label,
 .step-explanation,
 .hint-text {
@@ -114,6 +115,7 @@ button {
 .level-count,
 .level-note,
 .level-selector__title,
+.run-stats__title,
 .rule-label,
 .step-explanation,
 .hint-text {
@@ -292,7 +294,7 @@ button {
 
 .inspector-tabs {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(3, 1fr);
   border-bottom: 1px solid rgba(216, 209, 199, 0.7);
 }
 
@@ -335,13 +337,70 @@ button {
   min-height: 100%;
 }
 
-.proof-log__title {
+.proof-log__title,
+.run-stats__title {
   margin: 0 0 0.65rem;
   color: var(--muted);
   font-size: 0.78rem;
   letter-spacing: 0.08em;
   text-align: center;
   text-transform: uppercase;
+}
+
+.run-stats {
+  min-height: 100%;
+  display: grid;
+  align-content: start;
+  gap: 1rem;
+}
+
+.run-stats__list {
+  display: grid;
+  gap: 0;
+  margin: 0;
+}
+
+.run-stats__row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.72rem 0;
+  border-bottom: 1px solid rgba(216, 209, 199, 0.7);
+}
+
+.run-stats__row:first-child {
+  border-top: 1px solid rgba(216, 209, 199, 0.7);
+}
+
+.run-stats__row dt,
+.run-stats__row dd {
+  margin: 0;
+}
+
+.run-stats__row dt {
+  color: rgba(31, 28, 24, 0.76);
+  font-size: 0.9rem;
+}
+
+.run-stats__row dd {
+  color: var(--ink);
+  font-size: 1.15rem;
+}
+
+.run-stats__summary {
+  margin: 0;
+  padding: 0.85rem;
+  border: 1px solid rgba(184, 175, 163, 0.55);
+  background: rgba(255, 253, 249, 0.42);
+  color: rgba(31, 28, 24, 0.82);
+  font-size: 0.9rem;
+  line-height: 1.45;
+  text-align: center;
+}
+
+.run-stats__summary[hidden] {
+  display: none;
 }
 
 .proof-log__list {

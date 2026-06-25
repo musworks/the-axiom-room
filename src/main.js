@@ -14,6 +14,13 @@ import {
   saveHighestCompletedLevelIndex,
   saveLastOpenedLevelIndex,
 } from "./core/progress.js";
+import {
+  recordHintUsed,
+  recordInvalidAttempt,
+  recordRunComplete,
+  recordSuccessfulStep,
+  resetRunStats,
+} from "./core/runStats.js";
 import { dom } from "./ui/dom.js";
 import {
   appendProofLogEntry,
@@ -26,6 +33,7 @@ import {
   renderLevelSelector,
   renderLevelComplete,
   renderNoHints,
+  renderRunStats,
   renderSoundToggle,
   setExplanation,
   setHint,
@@ -65,6 +73,7 @@ function loadLevel(index) {
     handleLevelSelect,
   );
   renderBlocks(blockState, selectedIds, handleBlockClick);
+  renderRunStats(resetRunStats());
   saveLastOpenedLevelIndex(levelIndex);
 }
 
@@ -131,6 +140,7 @@ function applyInference(step, inputSymbols) {
   setStatus(`⊢ ${step.output}`, "success", step.label);
   setExplanation(step.explanation);
   appendProofLogEntry(inputSymbols, step.output, step.label);
+  renderRunStats(recordSuccessfulStep());
 
   if (step.output === getCurrentLevel().target) {
     completeLevel(step);
@@ -142,6 +152,7 @@ function applyInference(step, inputSymbols) {
 
 function completeLevel(step) {
   solved = true;
+  renderRunStats(recordRunComplete());
   renderLevelComplete(getCurrentLevel().target, step.label, step.explanation);
 
   if (levelIndex > highestCompletedLevelIndex) {
@@ -182,6 +193,7 @@ function showInvalidFeedback() {
   setExplanation("");
   clearSelection();
   playWrongSound();
+  renderRunStats(recordInvalidAttempt());
   renderInvalidSelection();
 }
 
@@ -193,12 +205,16 @@ function showHint() {
     return;
   }
 
+  const isNewHint = hintIndex < hints.length;
   const currentHint = hints[Math.min(hintIndex, hints.length - 1)];
   setHint(`Hint: ${currentHint}`);
 
-  if (hintIndex < hints.length - 1) {
+  if (isNewHint) {
     hintIndex += 1;
-  } else {
+    renderRunStats(recordHintUsed());
+  }
+
+  if (hintIndex >= hints.length) {
     renderHintButtonLastHint();
   }
 }
@@ -223,6 +239,10 @@ dom.nextButton.addEventListener("click", () => {
 
 dom.proofLogTab.addEventListener("click", () => {
   showInspectorPanel("proof-log");
+});
+
+dom.statsTab.addEventListener("click", () => {
+  showInspectorPanel("stats");
 });
 
 dom.levelsTab.addEventListener("click", () => {
