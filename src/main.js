@@ -56,6 +56,20 @@ function getCurrentLevel() {
   return levels[levelIndex];
 }
 
+function getLevelBestRecords() {
+  return levels.map((_, index) => getBestRecord(index));
+}
+
+function renderCurrentLevelSelector() {
+  renderLevelSelector(
+    levels.length,
+    levelIndex,
+    highestCompletedLevelIndex,
+    getLevelBestRecords(),
+    handleLevelSelect,
+  );
+}
+
 function loadLevel(index) {
   levelIndex = index;
   solved = false;
@@ -69,12 +83,7 @@ function loadLevel(index) {
   blockState = level.premises.map((symbol) => createBlock(symbol));
 
   renderLevel(level, levelIndex, levels.length);
-  renderLevelSelector(
-    levels.length,
-    levelIndex,
-    highestCompletedLevelIndex,
-    handleLevelSelect,
-  );
+  renderCurrentLevelSelector();
   renderBlocks(blockState, selectedIds, handleBlockClick);
   renderRunStats(resetRunStats(), bestRecord);
   saveLastOpenedLevelIndex(levelIndex);
@@ -168,13 +177,9 @@ function completeLevel(step) {
   if (levelIndex > highestCompletedLevelIndex) {
     highestCompletedLevelIndex = levelIndex;
     saveHighestCompletedLevelIndex(highestCompletedLevelIndex);
-    renderLevelSelector(
-      levels.length,
-      levelIndex,
-      highestCompletedLevelIndex,
-      handleLevelSelect,
-    );
   }
+
+  renderCurrentLevelSelector();
 
   blockState = blockState.map((block) => ({
     ...block,

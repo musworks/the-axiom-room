@@ -48,19 +48,44 @@ export function renderLevelSelector(
   totalLevels,
   currentLevelIndex,
   highestCompletedLevelIndex,
+  bestRecords,
   onLevelSelect,
 ) {
   dom.levelSelector.innerHTML = "";
 
   for (let index = 0; index < totalLevels; index += 1) {
+    const bestRecord = bestRecords[index];
+    const isCleanSolved = bestRecord
+      && bestRecord.invalidAttempts === 0
+      && bestRecord.hintsUsed === 0;
+    const isCompleted = index <= highestCompletedLevelIndex || Boolean(bestRecord);
+    const badge = isCleanSolved ? "★" : isCompleted ? "✓" : "";
+    const statusLabel = isCleanSolved ? ", clean solved" : isCompleted ? ", completed" : "";
     const button = document.createElement("button");
+    const levelNumber = document.createElement("span");
+
     button.type = "button";
     button.className = "level-button";
-    button.textContent = String(index + 1);
-    button.setAttribute("aria-label", `Level ${index + 1}`);
+    button.setAttribute("aria-label", `Level ${index + 1}${statusLabel}`);
 
-    if (index <= highestCompletedLevelIndex) {
+    levelNumber.className = "level-button__number";
+    levelNumber.textContent = String(index + 1);
+    button.appendChild(levelNumber);
+
+    if (badge) {
+      const badgeElement = document.createElement("span");
+      badgeElement.className = "level-button__badge";
+      badgeElement.textContent = badge;
+      badgeElement.setAttribute("aria-hidden", "true");
+      button.appendChild(badgeElement);
+    }
+
+    if (isCompleted) {
       button.classList.add("completed");
+    }
+
+    if (isCleanSolved) {
+      button.classList.add("clean-solved");
     }
 
     if (index === currentLevelIndex) {
